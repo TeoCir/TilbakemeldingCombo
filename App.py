@@ -137,20 +137,39 @@ with tab1:
                         if ukjente:
                             st.caption(f"🔍 {len(ukjente)} post(er) markert for manuell gjennomgang.")
 
-                        st.markdown("<br>", unsafe_allow_html=True)
                         total_fmt = f"{total:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
                         if sum_fritt is not None:
                             fs_fmt = f"{sum_fritt:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
                             diff = round(abs(total - sum_fritt), 2)
                             if diff <= 1.0:
-                                st.success(f"✅ Totalsum: {total_fmt} kr — matcher Sum på fakturaen")
+                                st.markdown(f"""
+                                <div style="margin-top: 16px; padding: 14px 20px; border-radius: 8px;
+                                            background-color: #f0faf0; border: 1px solid #b2dfb2;
+                                            display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-size: 15px; color: #2a6e2a;">✅ Totalsum</span>
+                                    <span style="font-size: 22px; font-weight: 700; color: #2a6e2a;">{total_fmt} kr</span>
+                                    <span style="font-size: 13px; color: #888;">matcher Sum på fakturaen</span>
+                                </div>""", unsafe_allow_html=True)
                             else:
                                 diff_fmt = f"{diff:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
-                                st.error(f"⚠️ Beregnet: {total_fmt} kr  |  Sum fritt: {fs_fmt} kr  |  Avvik: {diff_fmt} kr — sjekk [Ukjent]-poster")
+                                st.markdown(f"""
+                                <div style="margin-top: 16px; padding: 14px 20px; border-radius: 8px;
+                                            background-color: #fff4f4; border: 1px solid #f5c2c2;
+                                            display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-size: 15px; color: #a00;">⚠️ Avvik oppdaget</span>
+                                    <span style="font-size: 22px; font-weight: 700; color: #a00;">{total_fmt} kr</span>
+                                    <span style="font-size: 13px; color: #888;">Sum fritt: {fs_fmt} kr &nbsp;|&nbsp; Avvik: {diff_fmt} kr</span>
+                                </div>""", unsafe_allow_html=True)
                         else:
-                            st.markdown(f"**Beregnet totalsum: {total_fmt} kr**")
-                            st.info("ℹ️ Kunne ikke lese Sum fritt automatisk. Sjekk manuelt.")
+                            st.markdown(f"""
+                            <div style="margin-top: 16px; padding: 14px 20px; border-radius: 8px;
+                                        background-color: #f5f5f5; border: 1px solid #ddd;
+                                        display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 15px; color: #555;">Totalsum</span>
+                                <span style="font-size: 22px; font-weight: 700; color: #333;">{total_fmt} kr</span>
+                                <span style="font-size: 13px; color: #aaa;">Sjekk mot faktura manuelt</span>
+                            </div>""", unsafe_allow_html=True)
                     else:
                         st.warning("⚠️ Ingen poster funnet.")
                 except Exception as e:
