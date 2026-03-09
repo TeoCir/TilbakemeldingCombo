@@ -7,158 +7,15 @@ from io import BytesIO
 
 st.set_page_config(page_title="Tilbakemelding Verktøy", page_icon="⚙️", layout="wide")
 
-# ── Fiori-inspirert styling ──────────────────────────────────────────────────
-st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+st.title("Tilbakemelding Verktøy")
+st.markdown(
+    "<div style='margin-bottom: 0.5em; color: #888; font-size: 0.9em;'>"
+    "Utviklet av <strong>Teodoro</strong>"
+    "</div>",
+    unsafe_allow_html=True
+)
+st.info("🔒 PDF-en og Excel-filer behandles kun for analyse og lagres ikke. Ingen data deles med tredjepart.")
 
-html, body, [class*="css"] {
-    font-family: 'IBM Plex Sans', sans-serif !important;
-}
-
-/* Hide default Streamlit header */
-header[data-testid="stHeader"] { display: none; }
-#MainMenu { display: none; }
-footer { display: none; }
-
-/* Shell bar */
-.shellbar {
-    background: #354a5e;
-    padding: 0 32px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: -1rem -1rem 0 -1rem;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
-.shellbar-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: #fff;
-    letter-spacing: 0.01em;
-}
-.shellbar-by {
-    font-size: 12px;
-    color: rgba(255,255,255,0.4);
-    letter-spacing: 0.03em;
-}
-
-/* Info / warning strips */
-.info-strip {
-    background: #e8f2ff;
-    border-left: 3px solid #0070f2;
-    border-radius: 4px;
-    padding: 9px 14px;
-    font-size: 13px;
-    color: #0040b0;
-    margin: 16px 0 10px 0;
-}
-.warning-strip {
-    background: #fff8e6;
-    border-left: 3px solid #e9a800;
-    border-radius: 4px;
-    padding: 9px 14px;
-    font-size: 13px;
-    color: #7a5000;
-    margin-bottom: 20px;
-}
-
-/* Cards */
-.stCard {
-    background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 4px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-    padding: 20px;
-    margin-bottom: 16px;
-}
-
-/* Tables */
-thead tr th {
-    background: #f5f6f7 !important;
-    font-size: 11px !important;
-    font-weight: 600 !important;
-    letter-spacing: 0.07em !important;
-    text-transform: uppercase !important;
-    color: #a5a5a5 !important;
-    padding: 9px 16px !important;
-    border-bottom: 1px solid #e5e5e5 !important;
-}
-thead th:nth-child(2) { text-align: center !important; }
-thead th:nth-child(3) { text-align: right !important; }
-
-tbody td {
-    padding: 10px 16px !important;
-    font-size: 13.5px !important;
-    border-bottom: 1px solid #f2f2f2 !important;
-    color: #32363a !important;
-}
-tbody tr:hover td { background: #f0f7ff !important; }
-tbody tr:last-child td { border-bottom: none !important; }
-
-/* Buttons */
-.stButton > button {
-    background: #0070f2 !important;
-    color: #fff !important;
-    border: none !important;
-    border-radius: 4px !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
-    padding: 8px 20px !important;
-    font-family: 'IBM Plex Sans', sans-serif !important;
-}
-.stButton > button:hover {
-    background: #0040b0 !important;
-}
-
-/* Tabs */
-.stTabs [data-baseweb="tab-list"] {
-    background: #223548;
-    padding: 0 16px;
-    gap: 0;
-}
-.stTabs [data-baseweb="tab"] {
-    color: rgba(255,255,255,0.55) !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
-    padding: 10px 18px !important;
-    border-bottom: 2px solid transparent !important;
-    background: transparent !important;
-}
-.stTabs [aria-selected="true"] {
-    color: #fff !important;
-    border-bottom-color: #0070f2 !important;
-}
-.stTabs [data-baseweb="tab-highlight"] { display: none; }
-.stTabs [data-baseweb="tab-border"] { display: none; }
-
-/* Download button */
-.stDownloadButton > button {
-    background: #fff !important;
-    color: #0070f2 !important;
-    border: 1px solid #0070f2 !important;
-    border-radius: 4px !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
-}
-.stDownloadButton > button:hover {
-    background: #e8f2ff !important;
-}
-
-table { width: 100% !important; border-collapse: collapse; }
-</style>
-
-<div class="shellbar">
-    <span class="shellbar-title">Tilbakemelding Verktøy</span>
-    <span class="shellbar-by">Utviklet av Teodoro</span>
-</div>
-<div class="info-strip">
-    🔒 PDF-en og Excel-filer behandles kun for analyse og lagres ikke. Ingen data deles med tredjepart.
-</div>
-""", unsafe_allow_html=True)
-
-# Tabs
 tab1, tab2 = st.tabs(["📄 Faktura Analyse", "🏗️ iSEKK/Kran"])
 
 
@@ -166,7 +23,7 @@ tab1, tab2 = st.tabs(["📄 Faktura Analyse", "🏗️ iSEKK/Kran"])
 # TAB 1: FAKTURA ANALYSE (PDF)
 # ─────────────────────────────────────────────
 with tab1:
-    st.markdown('<div class="warning-strip">Faktura Analyse støtter kun Humlekjær Ødegaard enn så lenge.</div>', unsafe_allow_html=True)
+    st.warning("Faktura Analyse støtter kun Humlekjær Ødegaard enn så lenge.")
 
     def extract_invoice_data(pdf_bytes):
         items = {}
@@ -232,14 +89,24 @@ with tab1:
                     if summary:
                         st.success(f"Fant {len(summary)} poster")
 
-                        import pandas as _pd
                         rows = []
                         for name in sorted(summary.keys()):
                             count, summation = summary[name]
                             formatted = f"{summation:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
                             is_unknown = name.startswith("[")
                             rows.append({"Navn": name, "Antall": count, "Sum (kr)": formatted, "_ukjent": is_unknown})
-                        df_display = _pd.DataFrame(rows)
+                        df_display = pd.DataFrame(rows)
+
+                        st.markdown("""
+                        <style>
+                        thead tr th { background-color: #f0f2f6 !important; font-weight: 700 !important; font-size: 13px !important; }
+                        tbody tr:nth-child(even) td { background-color: #fafafa !important; }
+                        tbody tr:hover td { background-color: #eef2ff !important; }
+                        table { width: 100% !important; border-collapse: collapse !important; }
+                        th, td { padding: 9px 16px !important; text-align: left !important; font-size: 14px !important; border-bottom: 1px solid #e8e8e8 !important; }
+                        td:nth-child(2) { text-align: center !important; color: #888 !important; }
+                        td:nth-child(3) { text-align: right !important; font-weight: 600 !important; }
+                        </style>""", unsafe_allow_html=True)
 
                         def highlight_ukjent(row):
                             if row["_ukjent"]:
@@ -266,31 +133,31 @@ with tab1:
                             diff = round(abs(total - sum_fritt), 2)
                             if diff <= 1.0:
                                 st.markdown(f"""
-                                <div style="margin-top:16px; padding:14px 20px; border-radius:4px;
-                                            background:#f1fdf6; border:1px solid #a8d8bc;
+                                <div style="margin-top:16px; padding:14px 20px; border-radius:8px;
+                                            background:#f0faf0; border:1px solid #b2dfb2;
                                             display:flex; justify-content:space-between; align-items:center;">
-                                    <span style="font-size:11px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:#107e3e;">Totalsum</span>
-                                    <span style="font-size:22px; font-weight:600; color:#107e3e; font-family:'IBM Plex Mono',monospace;">{total_fmt} kr</span>
-                                    <span style="font-size:12px; color:#a5a5a5;">Matcher Sum på fakturaen</span>
+                                    <span style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:#2a6e2a;">Totalsum</span>
+                                    <span style="font-size:22px; font-weight:700; color:#2a6e2a;">{total_fmt} kr</span>
+                                    <span style="font-size:12px; color:#999;">Matcher Sum på fakturaen</span>
                                 </div>""", unsafe_allow_html=True)
                             else:
                                 diff_fmt = f"{diff:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
                                 st.markdown(f"""
-                                <div style="margin-top:16px; padding:14px 20px; border-radius:4px;
+                                <div style="margin-top:16px; padding:14px 20px; border-radius:8px;
                                             background:#fff0f0; border:1px solid #f5b2b2;
                                             display:flex; justify-content:space-between; align-items:center;">
-                                    <span style="font-size:11px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:#bb0000;">Avvik oppdaget</span>
-                                    <span style="font-size:22px; font-weight:600; color:#bb0000; font-family:'IBM Plex Mono',monospace;">{total_fmt} kr</span>
-                                    <span style="font-size:12px; color:#a5a5a5;">Sum fritt: {fs_fmt} kr &nbsp;|&nbsp; Avvik: {diff_fmt} kr</span>
+                                    <span style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:#a00;">Avvik oppdaget</span>
+                                    <span style="font-size:22px; font-weight:700; color:#a00;">{total_fmt} kr</span>
+                                    <span style="font-size:12px; color:#999;">Sum fritt: {fs_fmt} kr &nbsp;|&nbsp; Avvik: {diff_fmt} kr</span>
                                 </div>""", unsafe_allow_html=True)
                         else:
                             st.markdown(f"""
-                            <div style="margin-top:16px; padding:14px 20px; border-radius:4px;
-                                        background:#f5f6f7; border:1px solid #e5e5e5;
+                            <div style="margin-top:16px; padding:14px 20px; border-radius:8px;
+                                        background:#f5f5f5; border:1px solid #ddd;
                                         display:flex; justify-content:space-between; align-items:center;">
-                                <span style="font-size:11px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:#6a6d70;">Totalsum</span>
-                                <span style="font-size:22px; font-weight:600; color:#32363a; font-family:'IBM Plex Mono',monospace;">{total_fmt} kr</span>
-                                <span style="font-size:12px; color:#a5a5a5;">Sjekk mot faktura manuelt</span>
+                                <span style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:#666;">Totalsum</span>
+                                <span style="font-size:22px; font-weight:700; color:#333;">{total_fmt} kr</span>
+                                <span style="font-size:12px; color:#999;">Sjekk mot faktura manuelt</span>
                             </div>""", unsafe_allow_html=True)
                     else:
                         st.warning("Ingen poster funnet.")
@@ -422,9 +289,14 @@ with tab2:
 
                 st.markdown("""
                 <style>
-                tbody tr:last-child td { background-color: #f5f6f7 !important; font-weight: 700 !important; border-top: 2px solid #e5e5e5 !important; }
+                thead tr th { background-color: #f0f2f6 !important; font-weight: 700 !important; font-size: 13px !important; }
+                tbody tr:nth-child(even) td { background-color: #fafafa !important; }
+                tbody tr:hover td { background-color: #eef2ff !important; }
+                table { width: 100% !important; border-collapse: collapse !important; }
+                th, td { padding: 9px 16px !important; text-align: left !important; font-size: 14px !important; border-bottom: 1px solid #e8e8e8 !important; }
                 td:nth-child(2) { text-align: right !important; font-weight: 600 !important; }
-                td:nth-child(3) { text-align: right !important; font-weight: 600 !important; color: #107e3e !important; }
+                td:nth-child(3) { text-align: right !important; font-weight: 600 !important; color: #2a6e2a !important; }
+                tbody tr:last-child td { background-color: #f0f2f6 !important; font-weight: 700 !important; border-top: 2px solid #ccc !important; }
                 </style>""", unsafe_allow_html=True)
 
                 styled = (
@@ -447,3 +319,13 @@ with tab2:
                 st.download_button("Last ned som Excel", output.getvalue(), file_name="fraksjonsoversikt_samlet.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     else:
         st.info("Last opp én eller flere Excel-filer for å starte.")
+
+
+# Footer
+st.markdown("---")
+st.markdown(
+    "<div style='text-align: center; color: grey; font-size: 0.85em;'>"
+    "Utviklet av <strong>Teodoro</strong>"
+    "</div>",
+    unsafe_allow_html=True
+)
