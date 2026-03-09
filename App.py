@@ -7,15 +7,156 @@ from io import BytesIO
 
 st.set_page_config(page_title="Tilbakemelding Verktøy", page_icon="⚙️", layout="wide")
 
-# Header
-st.title("Tilbakemelding Verktøy")
-st.markdown(
-    "<div style='margin-bottom: 0.5em; color: #888; font-size: 0.9em;'>"
-    "Utviklet av <strong>Teodoro</strong>"
-    "</div>",
-    unsafe_allow_html=True
-)
-st.info("🔒 PDF-en og Excel-filer behandles kun for analyse og lagres ikke. Ingen data deles med tredjepart.")
+# ── Fiori-inspirert styling ──────────────────────────────────────────────────
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+html, body, [class*="css"] {
+    font-family: 'IBM Plex Sans', sans-serif !important;
+}
+
+/* Hide default Streamlit header */
+header[data-testid="stHeader"] { display: none; }
+#MainMenu { display: none; }
+footer { display: none; }
+
+/* Shell bar */
+.shellbar {
+    background: #354a5e;
+    padding: 0 32px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: -1rem -1rem 0 -1rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.shellbar-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.01em;
+}
+.shellbar-by {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.03em;
+}
+
+/* Info / warning strips */
+.info-strip {
+    background: #e8f2ff;
+    border-left: 3px solid #0070f2;
+    border-radius: 4px;
+    padding: 9px 14px;
+    font-size: 13px;
+    color: #0040b0;
+    margin: 16px 0 10px 0;
+}
+.warning-strip {
+    background: #fff8e6;
+    border-left: 3px solid #e9a800;
+    border-radius: 4px;
+    padding: 9px 14px;
+    font-size: 13px;
+    color: #7a5000;
+    margin-bottom: 20px;
+}
+
+/* Cards */
+.stCard {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+/* Tables */
+thead tr th {
+    background: #f5f6f7 !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.07em !important;
+    text-transform: uppercase !important;
+    color: #a5a5a5 !important;
+    padding: 9px 16px !important;
+    border-bottom: 1px solid #e5e5e5 !important;
+}
+thead th:nth-child(2) { text-align: center !important; }
+thead th:nth-child(3) { text-align: right !important; }
+
+tbody td {
+    padding: 10px 16px !important;
+    font-size: 13.5px !important;
+    border-bottom: 1px solid #f2f2f2 !important;
+    color: #32363a !important;
+}
+tbody tr:hover td { background: #f0f7ff !important; }
+tbody tr:last-child td { border-bottom: none !important; }
+
+/* Buttons */
+.stButton > button {
+    background: #0070f2 !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 4px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    padding: 8px 20px !important;
+    font-family: 'IBM Plex Sans', sans-serif !important;
+}
+.stButton > button:hover {
+    background: #0040b0 !important;
+}
+
+/* Tabs */
+.stTabs [data-baseweb="tab-list"] {
+    background: #223548;
+    padding: 0 16px;
+    gap: 0;
+}
+.stTabs [data-baseweb="tab"] {
+    color: rgba(255,255,255,0.55) !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    padding: 10px 18px !important;
+    border-bottom: 2px solid transparent !important;
+    background: transparent !important;
+}
+.stTabs [aria-selected="true"] {
+    color: #fff !important;
+    border-bottom-color: #0070f2 !important;
+}
+.stTabs [data-baseweb="tab-highlight"] { display: none; }
+.stTabs [data-baseweb="tab-border"] { display: none; }
+
+/* Download button */
+.stDownloadButton > button {
+    background: #fff !important;
+    color: #0070f2 !important;
+    border: 1px solid #0070f2 !important;
+    border-radius: 4px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+}
+.stDownloadButton > button:hover {
+    background: #e8f2ff !important;
+}
+
+table { width: 100% !important; border-collapse: collapse; }
+</style>
+
+<div class="shellbar">
+    <span class="shellbar-title">Tilbakemelding Verktøy</span>
+    <span class="shellbar-by">Utviklet av Teodoro</span>
+</div>
+<div class="info-strip">
+    🔒 PDF-en og Excel-filer behandles kun for analyse og lagres ikke. Ingen data deles med tredjepart.
+</div>
+""", unsafe_allow_html=True)
 
 # Tabs
 tab1, tab2 = st.tabs(["📄 Faktura Analyse", "🏗️ iSEKK/Kran"])
@@ -25,9 +166,7 @@ tab1, tab2 = st.tabs(["📄 Faktura Analyse", "🏗️ iSEKK/Kran"])
 # TAB 1: FAKTURA ANALYSE (PDF)
 # ─────────────────────────────────────────────
 with tab1:
-    st.subheader("Faktura Analyse")
-    st.markdown("Last opp en faktura-PDF og få automatisk gruppert oversikt over alle poster.")
-    st.warning("Faktura Analyse støtter kun Humlekjær Ødegaard enn så lenge.")
+    st.markdown('<div class="warning-strip">Faktura Analyse støtter kun Humlekjær Ødegaard enn så lenge.</div>', unsafe_allow_html=True)
 
     def extract_invoice_data(pdf_bytes):
         items = {}
@@ -93,7 +232,6 @@ with tab1:
                     if summary:
                         st.success(f"Fant {len(summary)} poster")
 
-                        # Build display dataframe
                         import pandas as _pd
                         rows = []
                         for name in sorted(summary.keys()):
@@ -103,33 +241,17 @@ with tab1:
                             rows.append({"Navn": name, "Antall": count, "Sum (kr)": formatted, "_ukjent": is_unknown})
                         df_display = _pd.DataFrame(rows)
 
-                        st.markdown("""
-                        <style>
-                        thead tr th { background-color: #f0f2f6; font-weight: 700; font-size: 14px; }
-                        tbody tr:nth-child(even) { background-color: #fafafa; }
-                        tbody tr:hover { background-color: #eef2ff; }
-                        table { width: 100% !important; border-collapse: collapse; }
-                        th, td { padding: 8px 14px !important; text-align: left; font-size: 14px; border-bottom: 1px solid #e0e0e0; }
-                        td:nth-child(2) { text-align: center; color: #555; font-family: inherit; }
-                        td:nth-child(3) { text-align: right; font-weight: 600; font-family: inherit; }
-                        .ukjent-rad td { background-color: #fff4e0 !important; color: #b85c00 !important; font-style: italic; border-left: 4px solid #f0a500 !important; }
-                        .ukjent-rad:hover td { background-color: #ffe8c0 !important; }
-                        </style>""", unsafe_allow_html=True)
-
                         def highlight_ukjent(row):
                             if row["_ukjent"]:
-                                return ["background-color: #fff4e0; color: #b85c00; font-style: italic; border-left: 4px solid #f0a500"] * len(row)
+                                return ["background-color: #fff4e0; color: #b85c00; font-style: italic; border-left: 3px solid #f0a500"] * len(row)
                             return [""] * len(row)
 
-                        vis_cols = ["Navn", "Antall", "Sum (kr)"]
                         styled = (
-                            df_display[vis_cols + ["_ukjent"]].style
+                            df_display[["Navn", "Antall", "Sum (kr)", "_ukjent"]].style
                             .apply(highlight_ukjent, axis=1)
                             .hide(axis="index")
                             .hide(subset=["_ukjent"], axis="columns")
-                            .set_table_styles([
-                                {"selector": "table", "props": [("width", "100%")]},
-                            ])
+                            .set_table_styles([{"selector": "table", "props": [("width", "100%")]}])
                         )
                         st.write(styled.to_html(), unsafe_allow_html=True)
 
@@ -144,31 +266,31 @@ with tab1:
                             diff = round(abs(total - sum_fritt), 2)
                             if diff <= 1.0:
                                 st.markdown(f"""
-                                <div style="margin-top: 16px; padding: 14px 20px; border-radius: 8px;
-                                            background-color: #f0faf0; border: 1px solid #b2dfb2;
-                                            display: flex; justify-content: space-between; align-items: center;">
-                                    <span style="font-size: 13px; color: #2a6e2a; text-transform: uppercase; letter-spacing: 0.05em;">Totalsum</span>
-                                    <span style="font-size: 22px; font-weight: 700; color: #2a6e2a;">{total_fmt} kr</span>
-                                    <span style="font-size: 13px; color: #888;">matcher Sum på fakturaen</span>
+                                <div style="margin-top:16px; padding:14px 20px; border-radius:4px;
+                                            background:#f1fdf6; border:1px solid #a8d8bc;
+                                            display:flex; justify-content:space-between; align-items:center;">
+                                    <span style="font-size:11px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:#107e3e;">Totalsum</span>
+                                    <span style="font-size:22px; font-weight:600; color:#107e3e; font-family:'IBM Plex Mono',monospace;">{total_fmt} kr</span>
+                                    <span style="font-size:12px; color:#a5a5a5;">Matcher Sum på fakturaen</span>
                                 </div>""", unsafe_allow_html=True)
                             else:
                                 diff_fmt = f"{diff:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
                                 st.markdown(f"""
-                                <div style="margin-top: 16px; padding: 14px 20px; border-radius: 8px;
-                                            background-color: #fff4f4; border: 1px solid #f5c2c2;
-                                            display: flex; justify-content: space-between; align-items: center;">
-                                    <span style="font-size: 13px; color: #a00; text-transform: uppercase; letter-spacing: 0.05em;">Avvik oppdaget</span>
-                                    <span style="font-size: 22px; font-weight: 700; color: #a00;">{total_fmt} kr</span>
-                                    <span style="font-size: 13px; color: #888;">Sum fritt: {fs_fmt} kr &nbsp;|&nbsp; Avvik: {diff_fmt} kr</span>
+                                <div style="margin-top:16px; padding:14px 20px; border-radius:4px;
+                                            background:#fff0f0; border:1px solid #f5b2b2;
+                                            display:flex; justify-content:space-between; align-items:center;">
+                                    <span style="font-size:11px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:#bb0000;">Avvik oppdaget</span>
+                                    <span style="font-size:22px; font-weight:600; color:#bb0000; font-family:'IBM Plex Mono',monospace;">{total_fmt} kr</span>
+                                    <span style="font-size:12px; color:#a5a5a5;">Sum fritt: {fs_fmt} kr &nbsp;|&nbsp; Avvik: {diff_fmt} kr</span>
                                 </div>""", unsafe_allow_html=True)
                         else:
                             st.markdown(f"""
-                            <div style="margin-top: 16px; padding: 14px 20px; border-radius: 8px;
-                                        background-color: #f5f5f5; border: 1px solid #ddd;
-                                        display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 15px; color: #555;">Totalsum</span>
-                                <span style="font-size: 22px; font-weight: 700; color: #333;">{total_fmt} kr</span>
-                                <span style="font-size: 13px; color: #aaa;">Sjekk mot faktura manuelt</span>
+                            <div style="margin-top:16px; padding:14px 20px; border-radius:4px;
+                                        background:#f5f6f7; border:1px solid #e5e5e5;
+                                        display:flex; justify-content:space-between; align-items:center;">
+                                <span style="font-size:11px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:#6a6d70;">Totalsum</span>
+                                <span style="font-size:22px; font-weight:600; color:#32363a; font-family:'IBM Plex Mono',monospace;">{total_fmt} kr</span>
+                                <span style="font-size:12px; color:#a5a5a5;">Sjekk mot faktura manuelt</span>
                             </div>""", unsafe_allow_html=True)
                     else:
                         st.warning("Ingen poster funnet.")
@@ -179,10 +301,9 @@ with tab1:
 
 
 # ─────────────────────────────────────────────
-# TAB 2: FRAKSJONSOVERSIKT (EXCEL)
+# TAB 2: iSEKK/KRAN (EXCEL)
 # ─────────────────────────────────────────────
 with tab2:
-    st.subheader("iSEKK / Kran")
     st.markdown("Last opp én eller flere Excel-filer fra SAP for å få samlet tilbakemelding for iSEKK/Kran.")
 
     BAD_UNIT_LABELS = {"", "NAN", "NA", "NONE", "NULL", "TOTAL", "SUM"}
@@ -202,7 +323,7 @@ with tab2:
         return str(f)
 
     uploaded_excels = st.file_uploader(
-        "Last opp en eller flere Excel-filer — husk å fjern SD Dokument etter bruk!",
+        "Last opp Excel-fil(er)",
         type=["xlsx"],
         accept_multiple_files=True,
         key="excel"
@@ -281,7 +402,6 @@ with tab2:
                 prices.loc["SUM"] = price_series.sum()
                 result["Delsum 3"] = prices
 
-                # Build single column dynamically based on units in file
                 units_label = " / ".join(units_order)
                 mengde_col = units_label
 
@@ -295,32 +415,22 @@ with tab2:
 
                 disp = result.copy()
                 disp[mengde_col] = disp.apply(build_mengde, axis=1)
-
-                # Format Delsum 3
                 disp["Delsum 3"] = disp["Delsum 3"].apply(fmt_number)
-
                 disp = disp[[mengde_col, "Delsum 3"]].reset_index()
                 if disp.columns[0] != "Fraksjon":
                     disp = disp.rename(columns={disp.columns[0]: "Fraksjon"})
 
                 st.markdown("""
                 <style>
-                thead tr th { background-color: #f0f2f6; font-weight: 700; font-size: 14px; }
-                tbody tr:nth-child(even) { background-color: #fafafa; }
-                tbody tr:hover { background-color: #eef2ff; }
-                table { width: 100% !important; border-collapse: collapse; }
-                th, td { padding: 8px 14px !important; text-align: left; font-size: 14px; border-bottom: 1px solid #e0e0e0; }
-                td:nth-child(2) { text-align: right; font-weight: 600; font-family: inherit; }
-                td:nth-child(3) { text-align: right; font-weight: 600; font-family: inherit; color: #2a6e2a; }
-                tr:last-child td { background-color: #f0f2f6 !important; font-weight: 700; border-top: 2px solid #ccc; }
+                tbody tr:last-child td { background-color: #f5f6f7 !important; font-weight: 700 !important; border-top: 2px solid #e5e5e5 !important; }
+                td:nth-child(2) { text-align: right !important; font-weight: 600 !important; }
+                td:nth-child(3) { text-align: right !important; font-weight: 600 !important; color: #107e3e !important; }
                 </style>""", unsafe_allow_html=True)
 
                 styled = (
                     disp.style
                     .hide(axis="index")
-                    .set_table_styles([
-                        {"selector": "table", "props": [("width", "100%")]},
-                    ])
+                    .set_table_styles([{"selector": "table", "props": [("width", "100%")]}])
                 )
 
                 st.subheader(f"Resultat ({len(uploaded_excels)} fil{'er' if len(uploaded_excels) > 1 else ''} samlet)")
@@ -333,16 +443,7 @@ with tab2:
                         export_df[col] = export_df[col].where(~export_df[col].isna(), "")
                     export_df.to_excel(w, sheet_name="Fraksjonsoversikt", index=True)
                 output.seek(0)
+                st.markdown("<br>", unsafe_allow_html=True)
                 st.download_button("Last ned som Excel", output.getvalue(), file_name="fraksjonsoversikt_samlet.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     else:
         st.info("Last opp én eller flere Excel-filer for å starte.")
-
-
-# Footer
-st.markdown("---")
-st.markdown(
-    "<div style='text-align: center; color: grey; font-size: 0.85em;'>"
-    "Utviklet av <strong>Teodoro</strong>"
-    "</div>",
-    unsafe_allow_html=True
-)
