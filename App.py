@@ -27,6 +27,7 @@ tab1, tab2 = st.tabs(["📄 Faktura Analyse", "🏗️ iSEKK/Kran"])
 with tab1:
     st.subheader("📄 Faktura Analyse")
     st.markdown("Last opp en faktura-PDF og få automatisk gruppert oversikt over alle poster.")
+    st.warning("⚠️ Faktura Analyse støtter kun **Humlekjær Ødegaard** enn så lenge.")
 
     def extract_invoice_data(pdf_bytes):
         items = {}
