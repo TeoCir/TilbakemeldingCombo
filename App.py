@@ -99,7 +99,8 @@ with tab1:
                         for name in sorted(summary.keys()):
                             count, summation = summary[name]
                             formatted = f"{summation:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
-                            rows.append({"Navn": name, "Antall": count, "Sum (kr)": formatted})
+                            is_unknown = name.startswith("[")
+                            rows.append({"Navn": name, "Antall": count, "Sum (kr)": formatted, "_ukjent": is_unknown})
                         df_display = _pd.DataFrame(rows)
 
                         st.markdown("""
@@ -111,16 +112,30 @@ with tab1:
                         th, td { padding: 8px 14px !important; text-align: left; font-size: 14px; border-bottom: 1px solid #e0e0e0; }
                         td:nth-child(2) { text-align: center; color: #555; font-family: inherit; }
                         td:nth-child(3) { text-align: right; font-weight: 600; font-family: inherit; }
+                        .ukjent-rad td { background-color: #fff4e0 !important; color: #b85c00 !important; font-style: italic; border-left: 4px solid #f0a500 !important; }
+                        .ukjent-rad:hover td { background-color: #ffe8c0 !important; }
                         </style>""", unsafe_allow_html=True)
 
+                        def highlight_ukjent(row):
+                            if row["_ukjent"]:
+                                return ["background-color: #fff4e0; color: #b85c00; font-style: italic; border-left: 4px solid #f0a500"] * len(row)
+                            return [""] * len(row)
+
+                        vis_cols = ["Navn", "Antall", "Sum (kr)"]
                         styled = (
-                            df_display.style
+                            df_display[vis_cols + ["_ukjent"]].style
+                            .apply(highlight_ukjent, axis=1)
                             .hide(axis="index")
+                            .hide(subset=["_ukjent"], axis="columns")
                             .set_table_styles([
                                 {"selector": "table", "props": [("width", "100%")]},
                             ])
                         )
                         st.write(styled.to_html(), unsafe_allow_html=True)
+
+                        ukjente = [n for n in summary.keys() if n.startswith("[")]
+                        if ukjente:
+                            st.warning(f"⚠️ {len(ukjente)} post(er) kunne ikke identifiseres automatisk og må feilsøkes manuelt.")
 
                         st.markdown("<br>", unsafe_allow_html=True)
                         total_fmt = f"{total:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
