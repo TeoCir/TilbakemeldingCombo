@@ -8,7 +8,7 @@ from io import BytesIO
 st.set_page_config(page_title="Tilbakemelding Verktøy", page_icon="⚙️", layout="wide")
 
 # Header
-st.title("⚙️ Tilbakemelding Verktøy")
+st.title("Tilbakemelding Verktøy")
 st.markdown(
     "<div style='margin-bottom: 0.5em; color: #888; font-size: 0.9em;'>"
     "Utviklet av <strong>Teodoro</strong>"
@@ -25,9 +25,9 @@ tab1, tab2 = st.tabs(["📄 Faktura Analyse", "🏗️ iSEKK/Kran"])
 # TAB 1: FAKTURA ANALYSE (PDF)
 # ─────────────────────────────────────────────
 with tab1:
-    st.subheader("📄 Faktura Analyse")
+    st.subheader("Faktura Analyse")
     st.markdown("Last opp en faktura-PDF og få automatisk gruppert oversikt over alle poster.")
-    st.warning("⚠️ Faktura Analyse støtter kun **Humlekjær Ødegaard** enn så lenge.")
+    st.warning("Faktura Analyse støtter kun Humlekjær Ødegaard enn så lenge.")
 
     def extract_invoice_data(pdf_bytes):
         items = {}
@@ -85,13 +85,13 @@ with tab1:
 
     if uploaded_pdf:
         pdf_bytes = uploaded_pdf.read()
-        if st.button("🔍 Analyser faktura", type="primary"):
+        if st.button("Analyser faktura", type="primary"):
             with st.spinner("Analyserer faktura..."):
                 try:
                     summary, total, sum_fritt = extract_invoice_data(pdf_bytes)
 
                     if summary:
-                        st.success(f"✅ Fant {len(summary)} poster")
+                        st.success(f"Fant {len(summary)} poster")
 
                         # Build display dataframe
                         import pandas as _pd
@@ -135,7 +135,7 @@ with tab1:
 
                         ukjente = [n for n in summary.keys() if n.startswith("[")]
                         if ukjente:
-                            st.caption(f"🔍 {len(ukjente)} post(er) markert for manuell gjennomgang.")
+                            st.caption(f"{len(ukjente)} post(er) markert for manuell gjennomgang.")
 
                         total_fmt = f"{total:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
@@ -147,7 +147,7 @@ with tab1:
                                 <div style="margin-top: 16px; padding: 14px 20px; border-radius: 8px;
                                             background-color: #f0faf0; border: 1px solid #b2dfb2;
                                             display: flex; justify-content: space-between; align-items: center;">
-                                    <span style="font-size: 15px; color: #2a6e2a;">✅ Totalsum</span>
+                                    <span style="font-size: 13px; color: #2a6e2a; text-transform: uppercase; letter-spacing: 0.05em;">Totalsum</span>
                                     <span style="font-size: 22px; font-weight: 700; color: #2a6e2a;">{total_fmt} kr</span>
                                     <span style="font-size: 13px; color: #888;">matcher Sum på fakturaen</span>
                                 </div>""", unsafe_allow_html=True)
@@ -157,7 +157,7 @@ with tab1:
                                 <div style="margin-top: 16px; padding: 14px 20px; border-radius: 8px;
                                             background-color: #fff4f4; border: 1px solid #f5c2c2;
                                             display: flex; justify-content: space-between; align-items: center;">
-                                    <span style="font-size: 15px; color: #a00;">⚠️ Avvik oppdaget</span>
+                                    <span style="font-size: 13px; color: #a00; text-transform: uppercase; letter-spacing: 0.05em;">Avvik oppdaget</span>
                                     <span style="font-size: 22px; font-weight: 700; color: #a00;">{total_fmt} kr</span>
                                     <span style="font-size: 13px; color: #888;">Sum fritt: {fs_fmt} kr &nbsp;|&nbsp; Avvik: {diff_fmt} kr</span>
                                 </div>""", unsafe_allow_html=True)
@@ -171,18 +171,18 @@ with tab1:
                                 <span style="font-size: 13px; color: #aaa;">Sjekk mot faktura manuelt</span>
                             </div>""", unsafe_allow_html=True)
                     else:
-                        st.warning("⚠️ Ingen poster funnet.")
+                        st.warning("Ingen poster funnet.")
                 except Exception as e:
-                    st.error(f"❌ Feil: {e}")
+                    st.error(f"Feil: {e}")
     else:
-        st.info("👆 Last opp en PDF-faktura for å starte analysen.")
+        st.info("Last opp en PDF-faktura for å starte analysen.")
 
 
 # ─────────────────────────────────────────────
 # TAB 2: FRAKSJONSOVERSIKT (EXCEL)
 # ─────────────────────────────────────────────
 with tab2:
-    st.subheader("🏗️ iSEKK/Kran")
+    st.subheader("iSEKK / Kran")
     st.markdown("Last opp én eller flere Excel-filer fra SAP for å få samlet tilbakemelding for iSEKK/Kran.")
 
     BAD_UNIT_LABELS = {"", "NAN", "NA", "NONE", "NULL", "TOTAL", "SUM"}
@@ -333,16 +333,16 @@ with tab2:
                         export_df[col] = export_df[col].where(~export_df[col].isna(), "")
                     export_df.to_excel(w, sheet_name="Fraksjonsoversikt", index=True)
                 output.seek(0)
-                st.download_button("📥 Last ned som Excel", output.getvalue(), file_name="fraksjonsoversikt_samlet.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                st.download_button("Last ned som Excel", output.getvalue(), file_name="fraksjonsoversikt_samlet.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     else:
-        st.info("👆 Last opp en eller flere Excel-filer for å starte.")
+        st.info("Last opp én eller flere Excel-filer for å starte.")
 
 
 # Footer
 st.markdown("---")
 st.markdown(
     "<div style='text-align: center; color: grey; font-size: 0.85em;'>"
-    "⚙️ Utviklet av <strong>Teodoro</strong>"
+    "Utviklet av <strong>Teodoro</strong>"
     "</div>",
     unsafe_allow_html=True
 )
