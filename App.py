@@ -5,10 +5,16 @@ import re
 import io
 from io import BytesIO
 
-st.set_page_config(page_title="Intern Verktøy - Teo", page_icon="⚙️", layout="wide")
+st.set_page_config(page_title="Tilbakemelding Verktøy", page_icon="⚙️", layout="wide")
 
 # Header
-st.title("⚙️ Internt Verktøy")
+st.title("⚙️ Tilbakemelding Verktøy")
+st.markdown(
+    "<div style='margin-bottom: 0.5em; color: #888; font-size: 0.9em;'>"
+    "Utviklet av <strong>Teodoro</strong>"
+    "</div>",
+    unsafe_allow_html=True
+)
 st.info("🔒 PDF-en og Excel-filer behandles kun for analyse og lagres ikke. Ingen data deles med tredjepart.")
 
 # Tabs
@@ -236,7 +242,19 @@ with tab2:
                     disp.style
                     .set_properties(subset=["Fraksjon"], **{"font-weight": "bold", "font-size": "15px"})
                     .set_properties(**{"font-size": "14px"})
+                    .set_table_styles([
+                        {"selector": "table", "props": [("width", "100%"), ("table-layout", "auto")]},
+                        {"selector": "th", "props": [("text-align", "left"), ("white-space", "nowrap")]},
+                        {"selector": "td", "props": [("white-space", "nowrap")]},
+                    ])
                 )
+
+                st.markdown("""
+                <style>
+                [data-testid="stHorizontalBlock"] { width: 100% !important; }
+                .stDataFrame, .element-container { width: 100% !important; }
+                table { width: 100% !important; }
+                </style>""", unsafe_allow_html=True)
 
                 st.subheader("Resultat (alle filer samlet)")
                 st.write(styled.to_html(), unsafe_allow_html=True)
@@ -257,7 +275,7 @@ with tab2:
 st.markdown("---")
 st.markdown(
     "<div style='text-align: center; color: grey; font-size: 0.85em;'>"
-    "⚙️ bygget av <strong>Teo</strong>"
+    "⚙️ Utviklet av <strong>Teodoro</strong>"
     "</div>",
     unsafe_allow_html=True
 )
