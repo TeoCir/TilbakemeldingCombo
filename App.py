@@ -135,7 +135,7 @@ with tab1:
 
                         ukjente = [n for n in summary.keys() if n.startswith("[")]
                         if ukjente:
-                            st.warning(f"⚠️ {len(ukjente)} post(er) kunne ikke identifiseres automatisk og må feilsøkes manuelt.")
+                            st.caption(f"🔍 {len(ukjente)} post(er) markert for manuell gjennomgang.")
 
                         st.markdown("<br>", unsafe_allow_html=True)
                         total_fmt = f"{total:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
