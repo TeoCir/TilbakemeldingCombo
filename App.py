@@ -93,33 +93,48 @@ with tab1:
                     if summary:
                         st.success(f"✅ Fant {len(summary)} poster")
 
-                        col1, col2, col3 = st.columns([3, 1, 2])
-                        col1.markdown("**Navn**")
-                        col2.markdown("**Antall**")
-                        col3.markdown("**Sum**")
-                        st.divider()
-
+                        # Build display dataframe
+                        import pandas as _pd
+                        rows = []
                         for name in sorted(summary.keys()):
                             count, summation = summary[name]
-                            col1, col2, col3 = st.columns([3, 1, 2])
-                            col1.write(name)
-                            col2.write(str(count))
                             formatted = f"{summation:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
-                            col3.write(formatted)
+                            rows.append({"Navn": name, "Antall": count, "Sum (kr)": formatted})
+                        df_display = _pd.DataFrame(rows)
 
-                        st.divider()
+                        st.markdown("""
+                        <style>
+                        thead tr th { background-color: #f0f2f6; font-weight: 700; font-size: 14px; }
+                        tbody tr:nth-child(even) { background-color: #fafafa; }
+                        tbody tr:hover { background-color: #eef2ff; }
+                        table { width: 100% !important; border-collapse: collapse; }
+                        th, td { padding: 8px 14px !important; text-align: left; font-size: 14px; border-bottom: 1px solid #e0e0e0; }
+                        td:nth-child(2) { text-align: center; color: #555; }
+                        td:nth-child(3) { text-align: right; font-weight: 600; font-family: monospace; }
+                        </style>""", unsafe_allow_html=True)
+
+                        styled = (
+                            df_display.style
+                            .hide(axis="index")
+                            .set_table_styles([
+                                {"selector": "table", "props": [("width", "100%")]},
+                            ])
+                        )
+                        st.write(styled.to_html(), unsafe_allow_html=True)
+
+                        st.markdown("<br>", unsafe_allow_html=True)
                         total_fmt = f"{total:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
-                        st.markdown(f"**BEREGNET TOTALSUM: {total_fmt}**")
 
                         if sum_fritt is not None:
                             fs_fmt = f"{sum_fritt:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
                             diff = round(abs(total - sum_fritt), 2)
                             if diff <= 1.0:
-                                st.success(f"✅ Matcher Sum fritt: {fs_fmt} (diff: {diff:.2f})")
+                                st.success(f"✅ Totalsum: {total_fmt} kr — matcher Sum fritt på fakturaen")
                             else:
                                 diff_fmt = f"{diff:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
-                                st.error(f"⚠️ Sum fritt fra PDF: {fs_fmt} — avvik: {diff_fmt} kr. Sjekk [Ukjent]-poster.")
+                                st.error(f"⚠️ Beregnet: {total_fmt} kr  |  Sum fritt: {fs_fmt} kr  |  Avvik: {diff_fmt} kr — sjekk [Ukjent]-poster")
                         else:
+                            st.markdown(f"**Beregnet totalsum: {total_fmt} kr**")
                             st.info("ℹ️ Kunne ikke lese Sum fritt automatisk. Sjekk manuelt.")
                     else:
                         st.warning("⚠️ Ingen poster funnet.")
@@ -232,32 +247,49 @@ with tab2:
                 prices.loc["SUM"] = price_series.sum()
                 result["Delsum 3"] = prices
 
+                # Build single column dynamically based on units in file
+                units_label = " / ".join(units_order)
+                mengde_col = units_label
+
+                def build_mengde(row):
+                    for unit in units_order:
+                        if unit in result.columns:
+                            val = row.get(unit, None)
+                            if pd.notna(val) and val != 0:
+                                return f"{fmt_number(val)} {unit}"
+                    return ""
+
                 disp = result.copy()
-                for col in disp.columns:
-                    disp[col] = disp[col].apply(fmt_number)
-                disp = disp.reset_index()
+                disp[mengde_col] = disp.apply(build_mengde, axis=1)
+
+                # Format Delsum 3
+                disp["Delsum 3"] = disp["Delsum 3"].apply(fmt_number)
+
+                disp = disp[[mengde_col, "Delsum 3"]].reset_index()
                 if disp.columns[0] != "Fraksjon":
                     disp = disp.rename(columns={disp.columns[0]: "Fraksjon"})
 
+                st.markdown("""
+                <style>
+                thead tr th { background-color: #f0f2f6; font-weight: 700; font-size: 14px; }
+                tbody tr:nth-child(even) { background-color: #fafafa; }
+                tbody tr:hover { background-color: #eef2ff; }
+                table { width: 100% !important; border-collapse: collapse; }
+                th, td { padding: 8px 14px !important; text-align: left; font-size: 14px; border-bottom: 1px solid #e0e0e0; }
+                td:nth-child(2) { text-align: right; font-weight: 600; font-family: monospace; }
+                td:nth-child(3) { text-align: right; font-weight: 600; font-family: monospace; color: #2a6e2a; }
+                tr:last-child td { background-color: #f0f2f6 !important; font-weight: 700; border-top: 2px solid #ccc; }
+                </style>""", unsafe_allow_html=True)
+
                 styled = (
                     disp.style
-                    .set_properties(subset=["Fraksjon"], **{"font-weight": "bold", "font-size": "15px"})
-                    .set_properties(**{"font-size": "14px"})
+                    .hide(axis="index")
                     .set_table_styles([
-                        {"selector": "table", "props": [("width", "100%"), ("table-layout", "auto")]},
-                        {"selector": "th", "props": [("text-align", "left"), ("white-space", "nowrap")]},
-                        {"selector": "td", "props": [("white-space", "nowrap")]},
+                        {"selector": "table", "props": [("width", "100%")]},
                     ])
                 )
 
-                st.markdown("""
-                <style>
-                [data-testid="stHorizontalBlock"] { width: 100% !important; }
-                .stDataFrame, .element-container { width: 100% !important; }
-                table { width: 100% !important; }
-                </style>""", unsafe_allow_html=True)
-
-                st.subheader("Resultat (alle filer samlet)")
+                st.subheader(f"Resultat ({len(uploaded_excels)} fil{'er' if len(uploaded_excels) > 1 else ''} samlet)")
                 st.write(styled.to_html(), unsafe_allow_html=True)
 
                 output = BytesIO()
