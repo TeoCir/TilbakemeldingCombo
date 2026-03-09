@@ -109,8 +109,8 @@ with tab1:
                         tbody tr:hover { background-color: #eef2ff; }
                         table { width: 100% !important; border-collapse: collapse; }
                         th, td { padding: 8px 14px !important; text-align: left; font-size: 14px; border-bottom: 1px solid #e0e0e0; }
-                        td:nth-child(2) { text-align: center; color: #555; }
-                        td:nth-child(3) { text-align: right; font-weight: 600; font-family: monospace; }
+                        td:nth-child(2) { text-align: center; color: #555; font-family: inherit; }
+                        td:nth-child(3) { text-align: right; font-weight: 600; font-family: inherit; }
                         </style>""", unsafe_allow_html=True)
 
                         styled = (
@@ -129,7 +129,7 @@ with tab1:
                             fs_fmt = f"{sum_fritt:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
                             diff = round(abs(total - sum_fritt), 2)
                             if diff <= 1.0:
-                                st.success(f"✅ Totalsum: {total_fmt} kr — matcher Sum fritt på fakturaen")
+                                st.success(f"✅ Totalsum: {total_fmt} kr — matcher Sum på fakturaen")
                             else:
                                 diff_fmt = f"{diff:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
                                 st.error(f"⚠️ Beregnet: {total_fmt} kr  |  Sum fritt: {fs_fmt} kr  |  Avvik: {diff_fmt} kr — sjekk [Ukjent]-poster")
@@ -276,8 +276,8 @@ with tab2:
                 tbody tr:hover { background-color: #eef2ff; }
                 table { width: 100% !important; border-collapse: collapse; }
                 th, td { padding: 8px 14px !important; text-align: left; font-size: 14px; border-bottom: 1px solid #e0e0e0; }
-                td:nth-child(2) { text-align: right; font-weight: 600; font-family: monospace; }
-                td:nth-child(3) { text-align: right; font-weight: 600; font-family: monospace; color: #2a6e2a; }
+                td:nth-child(2) { text-align: right; font-weight: 600; font-family: inherit; }
+                td:nth-child(3) { text-align: right; font-weight: 600; font-family: inherit; color: #2a6e2a; }
                 tr:last-child td { background-color: #f0f2f6 !important; font-weight: 700; border-top: 2px solid #ccc; }
                 </style>""", unsafe_allow_html=True)
 
